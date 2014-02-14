@@ -1,5 +1,4 @@
 ﻿app.controller('RadialGaugeCtrl', ['$scope', function ($scope) {
-
     $scope.value = 1.5;
     $scope.upperLimit = 6;
     $scope.lowerLimit = 0;
@@ -32,5 +31,4 @@
             color: '#C50200'
         }
     ];
-
 }]);
