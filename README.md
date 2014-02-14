@@ -16,6 +16,8 @@ List of directive attributes:
 -majorGraduationTextColor: Color used to draw text beside major graduation lines
 -needleColor: Color used to draw needle pointing actual value
 -width: Width of the gauge
+-majorGraduationTextSize: Numeric value used to override auto-sized graduation text
+-needleValueTextSize: Numeric value used to override auto-sized value text
 ```
 * If no value are provided by the controller the needle won't be display.
 * If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.
