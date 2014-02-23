@@ -29,7 +29,7 @@ List of directive attributes:
 
 **If no value are provided by the controller the needle won't be display.**
 
-** If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.**
+**If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.**
 
 
 Html view sample code usage:
