@@ -8,19 +8,28 @@ Angular.js Radial Gauge
 This radial gauge builded using D3.js JavaScript library is designed for Angular.js framework.
 
 List of directive attributes:
-```
--majorGraduations: Quantity of major graduation distributed on the gauge
--minorGraduations: Quantity of minor graduation between each major graduation
--majorGraduationColor: Color used to draw major graduation lines
--minorGraduationColor: Color used to draw minor graduation lines
--majorGraduationTextColor: Color used to draw text beside major graduation lines
--needleColor: Color used to draw needle pointing actual value
--width: Width of the gauge
--majorGraduationTextSize: Numeric value used to override auto-sized graduation text
--needleValueTextSize: Numeric value used to override auto-sized value text
-```
-* If no value are provided by the controller the needle won't be display.
-* If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.
+
+```majorGraduations```: Quantity of major graduation distributed on the gauge
+
+```minorGraduations```: Quantity of minor graduation between each major graduation
+
+```majorGraduationColor```: Color used to draw major graduation lines
+
+```minorGraduationColor```: Color used to draw minor graduation lines
+
+```majorGraduationTextColor```: Color used to draw text beside major graduation lines
+
+```needleColor```: Color used to draw needle pointing actual value
+
+```width```: Width of the gauge
+
+```majorGraduationTextSize```: Numeric value used to override auto-sized graduation text
+
+```needleValueTextSize```: Numeric value used to override auto-sized value text
+
+**If no value are provided by the controller the needle won't be display.**
+
+** If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.**
 
 
 Html view sample code usage:
