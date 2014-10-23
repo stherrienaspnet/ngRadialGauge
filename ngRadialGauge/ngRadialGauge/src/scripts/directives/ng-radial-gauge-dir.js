@@ -1,3 +1,9 @@
+/*
+ ng-radial-gauge 1.0
+ (c) 2010-2014 Stéphane Therrien, 
+ https://github.com/stherrienaspnet/ngRadialGauge
+ License: MIT
+*/
 ﻿var app = angular.module('myApp', []);
 
 app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
