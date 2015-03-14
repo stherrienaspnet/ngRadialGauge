@@ -4,8 +4,6 @@
  https://github.com/stherrienaspnet/ngRadialGauge
  License: MIT
 */
-﻿var app = angular.module('myApp', []);
-
 app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
  function ($window, $timeout, d3Service) {
      return {
@@ -23,6 +21,7 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
          link: function (scope, ele, attrs) {
              "use strict";
              d3Service.d3().then(function (d3) {
+                 var initialized = false;
                  var renderTimeout;
                  var width = parseInt(attrs.width) || 300;
                  var innerRadius = Math.round((width * 130) / 300);
@@ -40,6 +39,9 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                  var unactiveColor = "#D7D7D7";
                  var majorGraduationTextSize = parseInt(attrs.majorGraduationTextSize);
                  var needleValueTextSize = parseInt(attrs.needleValueTextSize);
+
+                 var maxLimit = scope.upperLimit ? scope.upperLimit : 100;
+                 var minLimit = scope.lowerLimit ? scope.lowerLimit : 0;
 
                  var svg = d3.select(ele[0])
                      .append('svg')
@@ -183,6 +185,10 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                      }
                  };
                  var renderGraduationNeedle = function (minLimit, maxLimit) {
+                     svg.selectAll('.mtt-graduation-needle').remove();
+                     svg.selectAll('.mtt-graduationValueText').remove();
+                     svg.selectAll('.mtt-graduation-needle-center').remove();
+                     
                      var centerX = width / 2;
                      var centerY = width / 2;
                      var centerColor;
@@ -211,7 +217,8 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                                .attr("d", triangle)
                                .style("stroke-width", 1)
                                .style("stroke", needleColor)
-                               .style("fill", needleColor);
+                               .style("fill", needleColor)
+                               .attr("class", "mtt-graduation-needle");
                          }
 
                          svg.append("text")
@@ -231,7 +238,8 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                        .attr("r", circleRadius)
                        .attr("cy", centerX)
                        .attr("cx", centerY)
-                       .attr("fill", centerColor);
+                       .attr("fill", centerColor)
+                       .attr("class", "mtt-graduation-needle-center");
                  };
                  $window.onresize = function () {
                      scope.$apply();
@@ -244,18 +252,13 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                  scope.$watch('ranges', function () {
                      scope.render();
                  }, true);
-                 scope.$watch('value', function () {
-                     scope.render();
-                 }, true);
+
+
                  scope.render = function () {
                      svg.selectAll('*').remove();
-
                      if (renderTimeout) clearTimeout(renderTimeout);
 
                      renderTimeout = $timeout(function () {
-
-                         var maxLimit = scope.upperLimit ? scope.upperLimit : 100;
-                         var minLimit = scope.lowerLimit ? scope.lowerLimit : 0;
                          var d3DataSource = [];
 
                          if (typeof scope.ranges === 'undefined') {
@@ -288,8 +291,15 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                          renderMajorGraduations(majorGraduationsAngles);
                          renderMajorGraduationTexts(majorGraduationsAngles, majorGraduationValues);
                          renderGraduationNeedle(minLimit, maxLimit);
+                         initialized = true;
                      }, 200);
+
                  };
+
+                 scope.$watch('value', function () {
+                     if (!initialized) return;
+                     renderGraduationNeedle(minLimit, maxLimit);
+                 }, true);
              });
          }
      };
