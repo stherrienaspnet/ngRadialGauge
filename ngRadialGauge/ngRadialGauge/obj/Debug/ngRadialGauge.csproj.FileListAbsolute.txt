@@ -1,5 +1,0 @@
-C:\Users\st1th\Documents\GitHub\ngRadialGauge\ngRadialGauge\ngRadialGauge\bin\ngRadialGauge.dll
-C:\Users\st1th\Documents\GitHub\ngRadialGauge\ngRadialGauge\ngRadialGauge\bin\ngRadialGauge.pdb
-C:\Users\st1th\Documents\GitHub\ngRadialGauge\ngRadialGauge\ngRadialGauge\obj\Debug\ngRadialGauge.csprojResolveAssemblyReference.cache
-C:\Users\st1th\Documents\GitHub\ngRadialGauge\ngRadialGauge\ngRadialGauge\obj\Debug\ngRadialGauge.dll
-C:\Users\st1th\Documents\GitHub\ngRadialGauge\ngRadialGauge\ngRadialGauge\obj\Debug\ngRadialGauge.pdb
