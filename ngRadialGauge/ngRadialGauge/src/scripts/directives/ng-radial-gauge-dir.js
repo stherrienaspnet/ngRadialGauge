@@ -37,11 +37,17 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                  var needleColor = attrs.needleColor || "#416094";
                  var valueVerticalOffset = Math.round((width * 30) / 300);
                  var unactiveColor = "#D7D7D7";
+                 var transitionMs = parseInt(attrs.transitionMs) || 750;
                  var majorGraduationTextSize = parseInt(attrs.majorGraduationTextSize);
                  var needleValueTextSize = parseInt(attrs.needleValueTextSize);
 
                  var maxLimit = scope.upperLimit ? scope.upperLimit : 100;
                  var minLimit = scope.lowerLimit ? scope.lowerLimit : 0;
+
+                 var needle = undefined;
+                 var scale = d3.scale.linear()
+                               .range([0,1])
+                               .domain([minLimit, maxLimit]);
 
                  var svg = d3.select(ele[0])
                      .append('svg')
@@ -125,6 +131,13 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
 
                      return graduationsAngles;
                  };
+                 var getNewAngle = function(value){
+                     var ratio = scale(value);
+                     var range = 240;
+                     var minScale = -120;
+                     var newAngle = minScale + (ratio * range);
+                     return newAngle;
+                 };
                  var renderMajorGraduationTexts = function (majorGraduationsAngles, majorGraduationValues) {
                      if (!scope.ranges) return;
 
@@ -197,28 +210,27 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                          centerColor = unactiveColor;
                      } else {
                          centerColor = needleColor;
-                         var needleValue = ((scope.value - minLimit) * 240 / (maxLimit - minLimit)) - 30;
-                         var thetaRad = needleValue * Math.PI / 180;
-
+                         var needleAngle = getNewAngle(scope.value);
                          var needleLen = innerRadius - majorGraduationLenght - majorGraduationMarginTop;
                          var needleRadius = (width * 2.5) / 300;
-                         var topX = centerX - needleLen * Math.cos(thetaRad);
-                         var topY = centerY - needleLen * Math.sin(thetaRad);
-                         var leftX = centerX - needleRadius * Math.cos(thetaRad - Math.PI / 2);
-                         var leftY = centerY - needleRadius * Math.sin(thetaRad - Math.PI / 2);
-                         var rightX = centerX - needleRadius * Math.cos(thetaRad + Math.PI / 2);
-                         var rightY = centerY - needleRadius * Math.sin(thetaRad + Math.PI / 2);
-                         var triangle = "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
                          var textSize = isNaN(needleValueTextSize) ? (width * 12) / 300 : needleValueTextSize;
                          var fontStyle = textSize + "px Courier";
 
                          if (scope.value >= minLimit && scope.value <= maxLimit) {
-                             svg.append("svg:path")
-                               .attr("d", triangle)
-                               .style("stroke-width", 1)
-                               .style("stroke", needleColor)
-                               .style("fill", needleColor)
-                               .attr("class", "mtt-graduation-needle");
+                             var lineData = [
+                                [needleRadius, 0],
+                                [0, -needleLen],
+                                [-needleRadius, 0],
+                                [needleRadius, 0]
+                             ];
+                             var pointerLine = d3.svg.line().interpolate('monotone');
+                             var pg = svg.append('g').data([lineData])
+                                         .attr('class', 'mtt-graduation-needle')
+                                         .style("fill", needleColor)
+                                         .attr('transform', 'translate(' + centerX + ',' + centerY + ')');
+                             needle = pg.append('path')
+                                        .attr('d', pointerLine)
+                                        .attr('transform', 'rotate('+needleAngle+')');
                          }
 
                          svg.append("text")
@@ -295,10 +307,28 @@ app.directive('ngRadialGauge', ['$window', '$timeout', 'd3Service',
                      }, 200);
 
                  };
-
+                 var update = function(){
+                     if (typeof scope.value === 'undefined') {
+                         centerColor = unactiveColor;
+                     } else {
+                         if (scope.value >= minLimit && scope.value <= maxLimit) {
+                             var needleAngle = getNewAngle(scope.value);
+                             needle.transition()
+                                   .duration(transitionMs)
+                                   .ease('elastic')
+                                   .attr('transform', 'rotate('+needleAngle+')');
+                             svg.selectAll('.mtt-graduationValueText')
+                                .text('[ ' + scope.value.toFixed(scope.precision) + scope.valueUnit + ' ]') ;
+                         } else {
+                             svg.selectAll('.mtt-graduation-needle').remove();
+                             svg.selectAll('.mtt-graduationValueText').remove();
+                             svg.selectAll('.mtt-graduation-needle-center').attr("fill", unactiveColor);
+                         }
+                     }
+                 };
                  scope.$watch('value', function () {
                      if (!initialized) return;
-                     renderGraduationNeedle(minLimit, maxLimit);
+                     update();
                  }, true);
              });
          }
