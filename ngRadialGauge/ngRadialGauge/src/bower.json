@@ -1,0 +1,19 @@
+{
+  "name": "ngRadialGauge",
+  "version": "0.1",
+  "description": "Angular.js Radial Gauge",
+  "main": "index.html",
+  "keywords": [
+    "Angular.Js",
+    "Radial",
+    "Gauge"
+  ],
+  "authors": [
+    "Stephane Therrien"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/stherrienaspnet/ngRadialGauge",
+  "dependencies": {
+    "angular": "~1.2.0",
+  }
+}
