@@ -18,6 +18,7 @@
     "**/*.txt"
   ],
   "dependencies": {
+     "d3": "~3.4.4",
      "angular": "~1.2.28",
      "jquery": "~2.1.0"
   }
