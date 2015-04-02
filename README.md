@@ -1,7 +1,7 @@
 ngRadialGauge
 =============
 
-Angular.js Radial Gauge
+Angular.js Radial Gauge (with bower support)
 
 ![alt tag](https://raw.github.com/stherrienaspnet/ngRadialGauge/master/ngRadialGauge/ngRadialGaugeDemo.png)
 
