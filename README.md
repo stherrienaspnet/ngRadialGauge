@@ -27,6 +27,9 @@ List of directive attributes:
 
 ```needleValueTextSize```: Numeric value used to override auto-sized value text
 
+```transitionMs```: Numeric value in milisecond to animate the needle (default is 750ms)
+
+
 **If no value are provided by the controller the needle won't be display.**
 
 **If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.**
