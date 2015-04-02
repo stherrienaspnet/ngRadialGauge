@@ -1,4 +1,5 @@
-﻿app.factory('d3Service', ['$document', '$window', '$q', '$rootScope',
+app.factory('d3Service', ['$document', '$window', '$q', '$rootScope',
+require=""
   function($document, $window, $q, $rootScope) {
       var d = $q.defer(),
           d3service = {
@@ -11,7 +12,7 @@
       var scriptTag = $document[0].createElement('script');
       scriptTag.type = 'text/javascript'; 
       scriptTag.async = true;
-      scriptTag.src = '//cdnjs.cloudflare.com/ajax/libs/d3/3.4.1/d3.min.js';
+      scriptTag.src = '../../public/d3/d3.min.js';
       scriptTag.onreadystatechange = function () {
           if (this.readyState == 'complete') onScriptLoad();
       };
