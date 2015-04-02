@@ -1,6 +1,6 @@
 {
   "name": "ngRadialGauge",
-  "version": "0.1",
+  "version": "1.0.0",
   "description": "Angular.js Radial Gauge",
   "main": "index.html",
   "keywords": [
@@ -13,7 +13,12 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/stherrienaspnet/ngRadialGauge",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
   "dependencies": {
-    "angular": "~1.2.0",
+     "angular": "~1.2.28",
+     "jquery": "~2.1.0"
   }
 }
