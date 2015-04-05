@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ngRadialGauge Demo</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="../src/ng-radial-gauge-dir.js"></script>
+    <script>
+
+    angular.module('RadialGaugeDemo', [
+      'ngRadialGauge'
+    ]);
+    
+    angular.module('RadialGaugeDemo').controller('RadialGaugeDemoCtrl', ['$scope', function ($scope) {
+        $scope.value = 1.5;
+        $scope.upperLimit = 6;
+        $scope.lowerLimit = 0;
+        $scope.unit = "kW";
+        $scope.precision = 2;
+        $scope.ranges = [
+            {
+                min: 0,
+                max: 1.5,
+                color: '#DEDEDE'
+            },
+            {
+                min: 1.5,
+                max: 2.5,
+                color: '#8DCA2F'
+            },
+            {
+                min: 2.5,
+                max: 3.5,
+                color: '#FDC702'
+            },
+            {
+                min: 3.5,
+                max: 4.5,
+                color: '#FF7700'
+            },
+            {
+                min: 4.5,
+                max: 6.0,
+                color: '#C50200'
+            }
+        ];
+    }]);    
+    
+    </script>
+</head>
+<body ng-app="RadialGaugeDemo">
+    <div ng-controller="RadialGaugeDemoCtrl">
+        <div width="300" ng-radial-gauge ranges="ranges" value="value" value-unit="unit" precision="precision" lower-limit="lowerLimit" upper-limit="upperLimit"></div>
+    </div>
+</body>
+</html>
