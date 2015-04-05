@@ -1,5 +1,5 @@
-app.factory('d3Service', ['$document', '$window', '$q', '$rootScope',
-require=""
+"use strict";
+angular.module("ngRadialGauge").factory('d3Service', ['$document', '$window', '$q', '$rootScope',
   function($document, $window, $q, $rootScope) {
       var d = $q.defer(),
           d3service = {

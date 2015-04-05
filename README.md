@@ -1,9 +1,8 @@
-ngRadialGauge
-=============
+# ngRadialGauge
 
-Angular.js Radial Gauge (with bower support)
+Angular.js Radial Gauge
 
-![alt tag](https://raw.github.com/stherrienaspnet/ngRadialGauge/master/ngRadialGauge/ngRadialGaugeDemo.png)
+![alt tag](https://raw.github.com/stherrienaspnet/ngRadialGauge/master/ngRadialGaugeDemo.png)
 
 This radial gauge builded using D3.js JavaScript library is designed for Angular.js framework.
 
@@ -35,19 +34,31 @@ List of directive attributes:
 **If the value provided by the controller is outside the limits defined, the needle won't be display but the value will   be display.**
 
 
-Html view sample code usage:
-``` 
-<body ng-app="myApp">
-    <div ng-controller="RadialGaugeCtrl">
-        <div width="300" ng-radial-gauge ranges="ranges" value="value" value-unit="unit" 
-        precision="precision" lower-limit="lowerLimit" upper-limit="upperLimit"></div>
-    </div>
-</body>
+## Installation
+
+You can install with Bower:
+
+`bower install ngRadialGauge`
+
+## Usage
+
+You need to include the module in your project:
+
+```JavaScript
+// in your app
+angular.module('myApp', ['ngRadialGauge']);
 ```
 
-Controller sample code usage:
+Then create the content:
+```HTML
+<div width="300" ng-radial-gauge ranges="ranges" value="value" value-unit="unit" 
+     precision="precision" lower-limit="lowerLimit" upper-limit="upperLimit">
+</div>
 ```
-app.controller('RadialGaugeCtrl', ['$scope', function ($scope) {
+
+The variables must be provided, e.g., in your controller:
+```JavaScript
+app.controller('MyCtrl', ['$scope', function ($scope) {
     $scope.value = 1.5;
     $scope.upperLimit = 6;
     $scope.lowerLimit = 0;
