@@ -23,6 +23,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
          link: function (scope, ele, attrs) {
              var initialized = false;
              var renderTimeout;
+             var gaugeAngle = parseInt(attrs.angle) || 120;
              var width = parseInt(attrs.width) || 300;
              var innerRadius = Math.round((width * 130) / 300);
              var outterRadius = Math.round((width * 145) / 300);
@@ -121,8 +122,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  return majorGraduationValues;
              };
              var getMajorGraduationAngles = function () {
-                 var scaleRange = 240;
-                 var minScale = -120;
+                 var scaleRange = 2 * gaugeAngle;
+                 var minScale = -1 * gaugeAngle;
                  var graduationsAngles = [];
                  for (var i = 0; i <= majorGraduations; i++) {
                      var scaleValue = minScale + i * scaleRange / (majorGraduations);
@@ -133,8 +134,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              };
              var getNewAngle = function(value){
                  var ratio = scale(value);
-                 var range = 240;
-                 var minScale = -120;
+                 var scaleRange = 2 * gaugeAngle;
+                 var minScale = -1 * gaugeAngle;
                  var newAngle = minScale + (ratio * range);
                  return newAngle;
              };
@@ -284,7 +285,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
 
                      //Render Gauge Color Area
                      var translate = "translate(" + width / 2 + "," + width / 2 + ")";
-                     var cScale = d3.scale.linear().domain([minLimit, maxLimit]).range([-120 * (Math.PI / 180), 120 * (Math.PI / 180)]);
+                     var cScale = d3.scale.linear().domain([minLimit, maxLimit]).range([-1 * gaugeAngle * (Math.PI / 180), gaugeAngle * (Math.PI / 180)]);
                      var arc = d3.svg.arc()
                          .innerRadius(innerRadius)
                          .outerRadius(outterRadius)
