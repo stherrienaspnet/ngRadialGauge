@@ -136,7 +136,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  var ratio = scale(value);
                  var scaleRange = 2 * gaugeAngle;
                  var minScale = -1 * gaugeAngle;
-                 var newAngle = minScale + (ratio * range);
+                 var newAngle = minScale + (ratio * scaleRange);
                  return newAngle;
              };
              var renderMajorGraduationTexts = function (majorGraduationsAngles, majorGraduationValues) {
