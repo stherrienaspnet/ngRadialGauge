@@ -14,6 +14,8 @@ List of directive attributes:
 
 ```majorGraduationColor```: Color used to draw major graduation lines
 
+```majorGraduationPrecision```: Precision used for Major Graduation labels.
+
 ```minorGraduationColor```: Color used to draw minor graduation lines
 
 ```majorGraduationTextColor```: Color used to draw text beside major graduation lines
@@ -28,6 +30,7 @@ List of directive attributes:
 
 ```transitionMs```: Numeric value in milisecond to animate the needle (default is 750ms)
 
+```data```: Single object that can hold any or all the gauge options for simplifying template. This object has higher priority then properties defined into the template, less verbose mapping into the html. Sample: options.transitionMs = 200; 
 
 **If no value are provided by the controller the needle won't be display.**
 
@@ -53,6 +56,11 @@ Then create the content:
 ```HTML
 <div width="300" ng-radial-gauge ranges="ranges" value="value" value-unit="unit" 
      precision="precision" lower-limit="lowerLimit" upper-limit="upperLimit">
+</div>
+```
+or
+```HTML
+<div width="300" ng-radial-gauge data="options">
 </div>
 ```
 
