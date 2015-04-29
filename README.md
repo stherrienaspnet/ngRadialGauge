@@ -22,6 +22,8 @@ List of directive attributes:
 
 ```needleColor```: Color used to draw needle pointing actual value
 
+```precision```: Precision used for value labels.
+
 ```width```: Width of the gauge
 
 ```majorGraduationTextSize```: Numeric value used to override auto-sized graduation text
