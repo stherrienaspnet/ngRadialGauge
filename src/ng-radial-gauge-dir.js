@@ -84,7 +84,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  var centerX = width / 2;
                  var centerY = width / 2;
                  //Render Major Graduations
-                 $.each(majorGraduationsAngles, function (index, pValue) {
+                 majorGraduationsAngles.forEach(function (pValue, index) {
                      var cos1Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - majorGraduationLength));
                      var sin1Adj = Math.round(Math.sin((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - majorGraduationLength));
                      var cos2Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop));
@@ -119,7 +119,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      var centerX = width / 2;
                      var centerY = width / 2;
                      //Render Minor Graduations
-                     $.each(minorGraduationsAngles, function (indexMinor, pValue) {
+                     minorGraduationsAngles.forEach(function (pValue, indexMinor) {
                          var cos1Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - minorGraduationLength));
                          var sin1Adj = Math.round(Math.sin((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - minorGraduationLength));
                          var cos2Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop));
@@ -306,7 +306,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          d3DataSource.push([minLimit, maxLimit, inactiveColor]);
                      } else {
                          //Data Generation
-                         $.each(ranges, function (index, pValue) {
+                         ranges.forEach(function (pValue, index) {
                              d3DataSource.push([pValue.min, pValue.max, pValue.color]);
                          });
                      }
