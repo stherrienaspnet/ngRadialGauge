@@ -289,7 +289,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              }, function () {
                  scope.render();
              });
-             scope.$watchCollection('[ranges, data.ranges, value, data.value]', function () {
+             scope.$watchCollection('[ranges, data.ranges, data.value]', function () {
                  scope.render();
              }, true);
 

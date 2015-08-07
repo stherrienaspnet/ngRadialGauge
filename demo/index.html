@@ -11,7 +11,7 @@
       'ngRadialGauge'
     ]);
     
-    angular.module('RadialGaugeDemo').controller('RadialGaugeDemoCtrl', ['$scope', function ($scope) {
+    angular.module('RadialGaugeDemo').controller('RadialGaugeDemoCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
         $scope.value = 1.5;
         $scope.upperLimit = 6;
         $scope.lowerLimit = 0;
@@ -44,6 +44,17 @@
                 color: '#C50200'
             }
         ];
+
+        function update() {
+            $timeout(function() {
+                $scope.value=$scope.value + 0.1;
+                if ($scope.value > $scope.upperLimit) {
+                    $scope.value=$scope.lowerLimit;
+                }
+                update();
+            }, 1000);
+        }
+        update();
     }]);    
     
     </script>
