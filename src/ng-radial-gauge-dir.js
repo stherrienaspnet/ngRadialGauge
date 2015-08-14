@@ -1,9 +1,14 @@
 /* global d3 */
 /*
- ng-radial-gauge 1.0.1
+ ng-radial-gauge 1.0.2
  (c) 2010-2014 Stéphane Therrien, 
  https://github.com/stherrienaspnet/ngRadialGauge
  License: MIT
+
+ Version 1.0.2
+ Author: Colin Bester
+ Modified to add viewBox and use width attribute for scaling of SVG
+ Removed flicker issue when using data=option mode.
 */
 "use strict";
 angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$timeout',
@@ -29,19 +34,33 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
 
              var renderTimeout;
              var gaugeAngle = parseInt(attrs.angle) || 120;
-             var width = parseInt(attrs.width) || 300;
-             var innerRadius = Math.round((width * 130) / 300);
-             var outerRadius = Math.round((width * 145) / 300);
+
+             //New width variable, now works in conjunction with fixed viewBox sizing
+             var _width = attrs.width || "100%";
+
+             /* Colin Bester
+                Width and height are not really such an issue with SVG but choose these values as
+                width of 300 seems to be pretty baked into code.
+                I took the easy path seeing as size is not that relevant and hard coded width and height
+                as I was too lazy to dig deep into code.
+                May be the wrong call, but seems safe option.
+             */
+             var view = {
+                width  : 300,
+                height : 225
+             }
+             var innerRadius = Math.round((view.width * 130) / 300);
+             var outerRadius = Math.round((view.width * 145) / 300);
              var majorGraduations = parseInt(attrs.majorGraduations - 1) || 5;
              var minorGraduations = parseInt(attrs.minorGraduations) || 10;
-             var majorGraduationLength = Math.round((width * 16) / 300);
-             var minorGraduationLength = Math.round((width * 10) / 300);
-             var majorGraduationMarginTop = Math.round((width * 7) / 300);
+             var majorGraduationLength = Math.round((view.width * 16) / 300);
+             var minorGraduationLength = Math.round((view.width * 10) / 300);
+             var majorGraduationMarginTop = Math.round((view.width * 7) / 300);
              var majorGraduationColor = attrs.majorGraduationColor || "#B0B0B0";
              var minorGraduationColor = attrs.minorGraduationColor || "#D0D0D0";
              var majorGraduationTextColor = attrs.majorGraduationTextColor || "#6C6C6C";
              var needleColor = attrs.needleColor || "#416094";
-             var valueVerticalOffset = Math.round((width * 30) / 300);
+             var valueVerticalOffset = Math.round((view.width * 30) / 300);
              var inactiveColor = "#D7D7D7";
              var transitionMs = parseInt(attrs.transitionMs) || 750;
              var majorGraduationTextSize = parseInt(attrs.majorGraduationTextSize);
@@ -76,13 +95,20 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              };
              updateInternalData();
              
+             /* Colin Bester
+                Add viewBox and width attributes.
+                Used view.width and view.height in case it's decided that hardcoding these values is an issue.
+                Width can be specified as %, px etc and will scale image to fit.
+             */
              var svg = d3.select(ele[0])
                  .append('svg')
-                 .attr('width', width)
-                 .attr('height', width * 0.75);
+                 .attr('width', _width)
+                 .attr('viewBox', '0 0 '+view.width+' '+view.height);
+                 // .attr('view.width', view.width)
+                 // .attr('height', view.width * 0.75);
              var renderMajorGraduations = function (majorGraduationsAngles) {
-                 var centerX = width / 2;
-                 var centerY = width / 2;
+                 var centerX = view.width / 2;
+                 var centerY = view.width / 2;
                  //Render Major Graduations
                  majorGraduationsAngles.forEach(function (pValue, index) {
                      var cos1Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - majorGraduationLength));
@@ -116,8 +142,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          minorGraduationsAngles.push(scaleValue);
                      }
 
-                     var centerX = width / 2;
-                     var centerY = width / 2;
+                     var centerX = view.width / 2;
+                     var centerY = view.width / 2;
                      //Render Minor Graduations
                      minorGraduationsAngles.forEach(function (pValue, indexMinor) {
                          var cos1Adj = Math.round(Math.cos((90 - pValue) * Math.PI / 180) * (innerRadius - majorGraduationMarginTop - minorGraduationLength));
@@ -169,13 +195,13 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var renderMajorGraduationTexts = function (majorGraduationsAngles, majorGraduationValues, pValueUnit) {
                  if (!ranges) return;
 
-                 var centerX = width / 2;
-                 var centerY = width / 2;
+                 var centerX = view.width / 2;
+                 var centerY = view.width / 2;
                  var textVerticalPadding = 5;
                  var textHorizontalPadding = 5;
 
                  var lastGraduationValue = majorGraduationValues[majorGraduationValues.length - 1];
-                 var textSize = isNaN(majorGraduationTextSize) ? (width * 12) / 300 : majorGraduationTextSize;
+                 var textSize = isNaN(majorGraduationTextSize) ? (view.width * 12) / 300 : majorGraduationTextSize;
                  var fontStyle = textSize + "px Courier";
 
                  var dummyText = svg.append("text")
@@ -230,8 +256,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  svg.selectAll('.mtt-graduationValueText').remove();
                  svg.selectAll('.mtt-graduation-needle-center').remove();
                  
-                 var centerX = width / 2;
-                 var centerY = width / 2;
+                 var centerX = view.width / 2;
+                 var centerY = view.width / 2;
                  var centerColor;
 
                  if (typeof value === 'undefined') {
@@ -240,8 +266,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      centerColor = needleColor;
                      var needleAngle = getNewAngle(value);
                      var needleLen = innerRadius - majorGraduationLength - majorGraduationMarginTop;
-                     var needleRadius = (width * 2.5) / 300;
-                     var textSize = isNaN(needleValueTextSize) ? (width * 12) / 300 : needleValueTextSize;
+                     var needleRadius = (view.width * 2.5) / 300;
+                     var textSize = isNaN(needleValueTextSize) ? (view.width * 12) / 300 : needleValueTextSize;
                      var fontStyle = textSize + "px Courier";
 
                      if (value >= minLimit && value <= maxLimit) {
@@ -272,7 +298,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          .text('[ ' + value.toFixed(precision) + valueUnit + ' ]');
                  }
 
-                 var circleRadius = (width * 6) / 300;
+                 var circleRadius = (view.width * 6) / 300;
 
                  svg.append("circle")
                    .attr("r", circleRadius)
@@ -289,7 +315,14 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              }, function () {
                  scope.render();
              });
-             scope.$watchCollection('[ranges, data.ranges, data.value]', function () {
+
+             /* Colin Bester
+                Removed watching of data.value as couldn't see reason for this, plus it's the cause of flicker when using
+                data=option mode of using directive.
+                I'm assuming that calling render function is not what was intended on every value update.
+             */
+             // scope.$watchCollection('[ranges, data.ranges, data.value]', function () {
+             scope.$watchCollection('[ranges, data.ranges]', function () {
                  scope.render();
              }, true);
 
@@ -312,7 +345,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      }
 
                      //Render Gauge Color Area
-                     var translate = "translate(" + width / 2 + "," + width / 2 + ")";
+                     var translate = "translate(" + view.width / 2 + "," + view.width / 2 + ")";
                      var cScale = d3.scale.linear().domain([minLimit, maxLimit]).range([-1 * gaugeAngle * (Math.PI / 180), gaugeAngle * (Math.PI / 180)]);
                      var arc = d3.svg.arc()
                          .innerRadius(innerRadius)
