@@ -48,7 +48,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var view = {
                 width  : 300,
                 height : 225
-             }
+             };
              var innerRadius = Math.round((view.width * 130) / 300);
              var outerRadius = Math.round((view.width * 145) / 300);
              var majorGraduations = parseInt(attrs.majorGraduations - 1) || 5;
