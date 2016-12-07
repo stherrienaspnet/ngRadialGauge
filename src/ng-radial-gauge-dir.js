@@ -31,12 +31,18 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var defaultUpperLimit = 100;
              var defaultLowerLimit = 0;
              var initialized = false;
+             var outerRadiusMultiplier = 145;
 
              var renderTimeout;
              var gaugeAngle = parseInt(attrs.angle) || 120;
 
              //New width variable, now works in conjunction with fixed viewBox sizing
              var _width = attrs.width || "100%";
+
+             //Number clamping utility
+             var clamp = function(value, min, max) {
+                 return Math.min(Math.max(value, min), max);
+             };
 
              /* Colin Bester
                 Width and height are not really such an issue with SVG but choose these values as
@@ -49,8 +55,10 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                 width  : 300,
                 height : 225
              };
-             var innerRadius = Math.round((view.width * 130) / 300);
-             var outerRadius = Math.round((view.width * 145) / 300);
+             //We want to allow adjustment of chart thickness but not excessively so
+             var barThickness = clamp(parseInt(attrs.barThickness) || 15, 10, 60);
+             var innerRadius = Math.round((view.width * (outerRadiusMultiplier - barThickness)) / 300);
+             var outerRadius = Math.round((view.width * outerRadiusMultiplier) / 300);
              var majorGraduations = parseInt(attrs.majorGraduations - 1) || 5;
              var minorGraduations = parseInt(attrs.minorGraduations) || 10;
              var majorGraduationLength = Math.round((view.width * 16) / 300);
@@ -270,8 +278,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      centerColor = needleColor;
                      var needleAngle = getNewAngle(value);
                      var needleLen = innerRadius;
-                     if (displayGraduationDatails()) {
-                         needleLen -= majorGraduationLength - majorGraduationMarginTop;
+                     if(displayGraduationDatails()){
+                         needleLen = needleLen - majorGraduationLength - majorGraduationMarginTop;
                      }
                      var needleRadius = (view.width * 2.5) / 300;
                      var textSize = isNaN(needleValueTextSize) ? (view.width * 12) / 300 : needleValueTextSize;
