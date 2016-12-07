@@ -5,3 +5,4 @@ dist
 .sass-cache
 .project
 .settings
+.idea
