@@ -14,23 +14,29 @@ List of directive attributes:
 
 ```majorGraduationColor```: Color used to draw major graduation lines
 
-```majorGraduationPrecision```: Precision used for Major Graduation labels.
+```majorGraduationPrecision```: Precision used for Major Graduation labels
 
 ```minorGraduationColor```: Color used to draw minor graduation lines
 
 ```majorGraduationTextColor```: Color used to draw text beside major graduation lines
 
+```hideGraduationDetails```: Disable graduation ticks and labels. (1 = disable details) _Default: 0_
+
 ```needleColor```: Color used to draw needle pointing actual value
 
-```precision```: Precision used for value labels.
+```precision```: Precision used for value labels
 
 ```width```: Width of the gauge
+
+```angle```: Overall angle of the chart.  e.g. 90 = half a circle. _Default: 120_
+
+```barThickness```: Thickness of the colored bar. (Clamped between 15-60). _Default: 15_
 
 ```majorGraduationTextSize```: Numeric value used to override auto-sized graduation text
 
 ```needleValueTextSize```: Numeric value used to override auto-sized value text
 
-```transitionMs```: Numeric value in milisecond to animate the needle (default is 750ms)
+```transitionMs```: Numeric value in milisecond to animate the needle. _Default: 750ms_
 
 ```data```: Single object that can hold any or all the gauge options for simplifying template. This object has higher priority then properties defined into the template, less verbose mapping into the html. Sample: options.transitionMs = 200; 
 
