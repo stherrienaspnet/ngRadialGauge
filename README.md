@@ -108,4 +108,4 @@ If you would like to help me to improve this control, notify me about any bug or
 
 Live Sample link: http://plnkr.co/edit/XhzY1TTbT4Kmujhyb57b?p=preview
 
-*A Special thanks to Frank Thelen who bring this project to bower!
+*A Special thanks to Frank Thelen who brought this project to bower!
