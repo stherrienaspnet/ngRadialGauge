@@ -66,6 +66,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var majorGraduationTextSize = parseInt(attrs.majorGraduationTextSize);
              var needleValueTextSize = parseInt(attrs.needleValueTextSize);
              var needle = undefined;
+             var hideGraduationDetails = parseInt(attrs.hideGraduationDetails) || 0;
 
              //The scope.data object might contain the data we need, otherwise we fall back on the scope.xyz property
              var extractData = function (prop) {
@@ -251,6 +252,9 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      .text(majorGraduationValues[i] + pValueUnit);
                  }
              };
+             var displayGraduationDatails = function() {
+                 return hideGraduationDetails == 0;
+             };
              var renderGraduationNeedle = function (value, valueUnit, precision, minLimit, maxLimit) {
                  svg.selectAll('.mtt-graduation-needle').remove();
                  svg.selectAll('.mtt-graduationValueText').remove();
@@ -265,7 +269,10 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  } else {
                      centerColor = needleColor;
                      var needleAngle = getNewAngle(value);
-                     var needleLen = innerRadius - majorGraduationLength - majorGraduationMarginTop;
+                     var needleLen = innerRadius;
+                     if (displayGraduationDatails()) {
+                         needleLen -= majorGraduationLength - majorGraduationMarginTop;
+                     }
                      var needleRadius = (view.width * 2.5) / 300;
                      var textSize = isNaN(needleValueTextSize) ? (view.width * 12) / 300 : needleValueTextSize;
                      var fontStyle = textSize + "px Courier";
@@ -306,6 +313,15 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                    .attr("cx", centerY)
                    .attr("fill", centerColor)
                    .attr("class", "mtt-graduation-needle-center");
+             };
+             var renderGraduations = function() {
+                 if (!displayGraduationDatails()) {
+                     return;
+                 }
+                 var majorGraduationsAngles = getMajorGraduationAngles();
+                 var majorGraduationValues = getMajorGraduationValues(minLimit, maxLimit, majorGraduationPrecision);
+                 renderMajorGraduations(majorGraduationsAngles);
+                 renderMajorGraduationTexts(majorGraduationsAngles, majorGraduationValues, valueUnit);
              };
              $window.onresize = function () {
                  scope.$apply();
@@ -359,16 +375,13 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          .attr("d", arc)
                          .style("fill", function (d) { return d[2]; })
                          .attr("transform", translate);
-
-                     var majorGraduationsAngles = getMajorGraduationAngles();
-                     var majorGraduationValues = getMajorGraduationValues(minLimit, maxLimit, majorGraduationPrecision);
-                     renderMajorGraduations(majorGraduationsAngles);
-                     renderMajorGraduationTexts(majorGraduationsAngles, majorGraduationValues, valueUnit);
+                     renderGraduations();
                      renderGraduationNeedle(value, valueUnit, precision, minLimit, maxLimit);
                      initialized = true;
                  }, 200);
 
              };
+
              var onValueChanged = function(pValue, pPrecision, pValueUnit) {
                  if (typeof pValue === 'undefined' || pValue == null) return;
                  
