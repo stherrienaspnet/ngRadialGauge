@@ -1,14 +1,13 @@
 /* global d3 */
 /*
- ng-radial-gauge 1.0.2
- (c) 2010-2014 Stéphane Therrien, 
+ ng-radial-gauge 1.0.3
+ (c) 2010-2017 Stéphane Therrien, 
  https://github.com/stherrienaspnet/ngRadialGauge
  License: MIT
 
- Version 1.0.2
- Author: Colin Bester
- Modified to add viewBox and use width attribute for scaling of SVG
- Removed flicker issue when using data=option mode.
+ Version 1.0.3
+ Author: Stephane Therrien
+ Fixed needle hidden when value are passing from out of range to in range.
 */
 "use strict";
 angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$timeout',
@@ -31,18 +30,12 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var defaultUpperLimit = 100;
              var defaultLowerLimit = 0;
              var initialized = false;
-             var outerRadiusMultiplier = 145;
 
              var renderTimeout;
              var gaugeAngle = parseInt(attrs.angle) || 120;
 
              //New width variable, now works in conjunction with fixed viewBox sizing
              var _width = attrs.width || "100%";
-
-             //Number clamping utility
-             var clamp = function(value, min, max) {
-                 return Math.min(Math.max(value, min), max);
-             };
 
              /* Colin Bester
                 Width and height are not really such an issue with SVG but choose these values as
@@ -55,10 +48,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                 width  : 300,
                 height : 225
              };
-             //We want to allow adjustment of chart thickness but not excessively so
-             var barThickness = clamp(parseInt(attrs.barThickness) || 15, 10, 60);
-             var innerRadius = Math.round((view.width * (outerRadiusMultiplier - barThickness)) / 300);
-             var outerRadius = Math.round((view.width * outerRadiusMultiplier) / 300);
+             var innerRadius = Math.round((view.width * 130) / 300);
+             var outerRadius = Math.round((view.width * 145) / 300);
              var majorGraduations = parseInt(attrs.majorGraduations - 1) || 5;
              var minorGraduations = parseInt(attrs.minorGraduations) || 10;
              var majorGraduationLength = Math.round((view.width * 16) / 300);
@@ -74,7 +65,6 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var majorGraduationTextSize = parseInt(attrs.majorGraduationTextSize);
              var needleValueTextSize = parseInt(attrs.needleValueTextSize);
              var needle = undefined;
-             var hideGraduationDetails = parseInt(attrs.hideGraduationDetails) || 0;
 
              //The scope.data object might contain the data we need, otherwise we fall back on the scope.xyz property
              var extractData = function (prop) {
@@ -260,9 +250,6 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                      .text(majorGraduationValues[i] + pValueUnit);
                  }
              };
-             var displayGraduationDatails = function() {
-                 return hideGraduationDetails == 0;
-             };
              var renderGraduationNeedle = function (value, valueUnit, precision, minLimit, maxLimit) {
                  svg.selectAll('.mtt-graduation-needle').remove();
                  svg.selectAll('.mtt-graduationValueText').remove();
@@ -277,16 +264,12 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  } else {
                      centerColor = needleColor;
                      var needleAngle = getNewAngle(value);
-                     var needleLen = innerRadius;
-                     if(displayGraduationDatails()){
-                         needleLen = needleLen - majorGraduationLength - majorGraduationMarginTop;
-                     }
+                     var needleLen = innerRadius - majorGraduationLength - majorGraduationMarginTop;
                      var needleRadius = (view.width * 2.5) / 300;
                      var textSize = isNaN(needleValueTextSize) ? (view.width * 12) / 300 : needleValueTextSize;
                      var fontStyle = textSize + "px Courier";
 
-                     if (value >= minLimit && value <= maxLimit) {
-                         var lineData = [
+                     var lineData = [
                             [needleRadius, 0],
                             [0, -needleLen],
                             [-needleRadius, 0],
@@ -300,7 +283,6 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          needle = pg.append('path')
                                     .attr('d', pointerLine)
                                     .attr('transform', 'rotate('+needleAngle+')');
-                     }
 
                      svg.append("text")
                          .attr("x", centerX)
@@ -321,15 +303,12 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                    .attr("cx", centerY)
                    .attr("fill", centerColor)
                    .attr("class", "mtt-graduation-needle-center");
-             };
-             var renderGraduations = function() {
-                 if (!displayGraduationDatails()) {
-                     return;
-                 }
-                 var majorGraduationsAngles = getMajorGraduationAngles();
-                 var majorGraduationValues = getMajorGraduationValues(minLimit, maxLimit, majorGraduationPrecision);
-                 renderMajorGraduations(majorGraduationsAngles);
-                 renderMajorGraduationTexts(majorGraduationsAngles, majorGraduationValues, valueUnit);
+                   
+                                         if (value < minLimit || value > maxLimit) {
+                          svg.selectAll('.mtt-graduation-needle').style("visibility", "hidden");
+                          svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
+                        }   
+                   
              };
              $window.onresize = function () {
                  scope.$apply();
@@ -383,27 +362,34 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                          .attr("d", arc)
                          .style("fill", function (d) { return d[2]; })
                          .attr("transform", translate);
-                     renderGraduations();
+
+                     var majorGraduationsAngles = getMajorGraduationAngles();
+                     var majorGraduationValues = getMajorGraduationValues(minLimit, maxLimit, majorGraduationPrecision);
+                     renderMajorGraduations(majorGraduationsAngles);
+                     renderMajorGraduationTexts(majorGraduationsAngles, majorGraduationValues, valueUnit);
                      renderGraduationNeedle(value, valueUnit, precision, minLimit, maxLimit);
                      initialized = true;
                  }, 200);
 
              };
-
              var onValueChanged = function(pValue, pPrecision, pValueUnit) {
                  if (typeof pValue === 'undefined' || pValue == null) return;
                  
-                 if (needle && pValue >= minLimit && pValue <= maxLimit) {
+                 svg.selectAll('.mtt-graduationValueText')
+                  .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
+                        
+                 if (pValue >= minLimit && pValue <= maxLimit) {
                         var needleAngle = getNewAngle(pValue);
                         needle.transition()
                             .duration(transitionMs)
                             .ease('elastic')
                             .attr('transform', 'rotate('+needleAngle+')');
-                        svg.selectAll('.mtt-graduationValueText')
-                        .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
+
+                        svg.selectAll('.mtt-graduation-needle').style("visibility", "visible");
+                            svg.selectAll('.mtt-graduation-needle-center').attr("fill", needleColor);
+                        
                     } else {
-                        svg.selectAll('.mtt-graduation-needle').remove();
-                        svg.selectAll('.mtt-graduationValueText').remove();
+                        svg.selectAll('.mtt-graduation-needle').style("visibility", "hidden");
                         svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
                     }
              };
