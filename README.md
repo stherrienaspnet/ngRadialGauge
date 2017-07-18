@@ -113,6 +113,8 @@ app.controller('MyCtrl', ['$scope', function ($scope) {
 If you would like to help me to improve this control, notify me about any bug or just ask a for a new feature request feel free to contact me at stherrienaspnet@gmail.com.
 
 Live Sample links: 
+
+
 http://plnkr.co/edit/XhzY1TTbT4Kmujhyb57b?p=preview
 
 
