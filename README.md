@@ -114,6 +114,8 @@ If you would like to help me to improve this control, notify me about any bug or
 
 Live Sample links: 
 http://plnkr.co/edit/XhzY1TTbT4Kmujhyb57b?p=preview
+
+
 http://plnkr.co/edit/bcL37ZOn6YyFBX1n9oay?p=preview
 
 *A Special thanks to Frank Thelen who brought this project to bower!
