@@ -120,7 +120,8 @@ http://plnkr.co/edit/XhzY1TTbT4Kmujhyb57b?p=preview
 
 http://plnkr.co/edit/bcL37ZOn6YyFBX1n9oay?p=preview
 
-Inside a loop
+(Inside a loop)
+
 http://plnkr.co/edit/iRaxiad4Jpr7quhK1hoq?p=preview
 
 *A Special thanks to Frank Thelen who brought this project to bower!
