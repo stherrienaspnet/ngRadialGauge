@@ -1,7 +1,7 @@
 /* global d3 */
 /*
  ng-radial-gauge 1.0.3
- (c) 2010-2017 Stéphane Therrien, 
+ (c) 2010-2017 Stéphane Therrien,
  https://github.com/stherrienaspnet/ngRadialGauge
  License: MIT
 
@@ -82,7 +82,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              var precision;
              var majorGraduationPrecision;
              var ranges;
-             
+
              var updateInternalData = function() {
                  maxLimit = extractData('upperLimit') ? extractData('upperLimit') : defaultUpperLimit;
                  minLimit = extractData('lowerLimit') ? extractData('lowerLimit') : defaultLowerLimit;
@@ -93,7 +93,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  ranges = extractData('ranges');
              };
              updateInternalData();
-             
+
              /* Colin Bester
                 Add viewBox and width attributes.
                 Used view.width and view.height in case it's decided that hardcoding these values is an issue.
@@ -184,7 +184,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  return graduationsAngles;
              };
              var getNewAngle = function(pValue) {
-                 var scale = d3.scale.linear().range([0, 1]).domain([minLimit, maxLimit]);
+                 var scale = d3.scaleLinear().range([0, 1]).domain([minLimit, maxLimit]);
                  var ratio = scale(pValue);
                  var scaleRange = 2 * gaugeAngle;
                  var minScale = -1 * gaugeAngle;
@@ -254,7 +254,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                  svg.selectAll('.mtt-graduation-needle').remove();
                  svg.selectAll('.mtt-graduationValueText').remove();
                  svg.selectAll('.mtt-graduation-needle-center').remove();
-                 
+
                  var centerX = view.width / 2;
                  var centerY = view.width / 2;
                  var centerColor;
@@ -275,7 +275,7 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                             [-needleRadius, 0],
                             [needleRadius, 0]
                          ];
-                         var pointerLine = d3.svg.line().interpolate('monotone');
+                         var pointerLine = d3.line().curve(d3.curveMonotoneX);
                          var pg = svg.append('g').data([lineData])
                                      .attr('class', 'mtt-graduation-needle')
                                      .style("fill", needleColor)
@@ -303,12 +303,12 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
                    .attr("cx", centerY)
                    .attr("fill", centerColor)
                    .attr("class", "mtt-graduation-needle-center");
-                   
+
                                          if (value < minLimit || value > maxLimit) {
                           svg.selectAll('.mtt-graduation-needle').style("visibility", "hidden");
                           svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
-                        }   
-                   
+                        }
+
              };
              $window.onresize = function () {
                  scope.$apply();
@@ -349,8 +349,8 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
 
                      //Render Gauge Color Area
                      var translate = "translate(" + view.width / 2 + "," + view.width / 2 + ")";
-                     var cScale = d3.scale.linear().domain([minLimit, maxLimit]).range([-1 * gaugeAngle * (Math.PI / 180), gaugeAngle * (Math.PI / 180)]);
-                     var arc = d3.svg.arc()
+                     var cScale = d3.scaleLinear().domain([minLimit, maxLimit]).range([-1 * gaugeAngle * (Math.PI / 180), gaugeAngle * (Math.PI / 180)]);
+                     var arc = d3.arc()
                          .innerRadius(innerRadius)
                          .outerRadius(outerRadius)
                          .startAngle(function (d) { return cScale(d[0]); })
@@ -374,20 +374,19 @@ angular.module("ngRadialGauge",[]).directive('ngRadialGauge', ['$window', '$time
              };
              var onValueChanged = function(pValue, pPrecision, pValueUnit) {
                  if (typeof pValue === 'undefined' || pValue == null) return;
-                 
+
                  svg.selectAll('.mtt-graduationValueText')
                   .text('[ ' + pValue.toFixed(pPrecision) + pValueUnit + ' ]') ;
-                        
+
                  if (pValue >= minLimit && pValue <= maxLimit) {
                         var needleAngle = getNewAngle(pValue);
                         needle.transition()
                             .duration(transitionMs)
-                            .ease('elastic')
                             .attr('transform', 'rotate('+needleAngle+')');
 
                         svg.selectAll('.mtt-graduation-needle').style("visibility", "visible");
                             svg.selectAll('.mtt-graduation-needle-center').attr("fill", needleColor);
-                        
+
                     } else {
                         svg.selectAll('.mtt-graduation-needle').style("visibility", "hidden");
                         svg.selectAll('.mtt-graduation-needle-center').attr("fill", inactiveColor);
