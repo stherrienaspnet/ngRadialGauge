@@ -1,0 +1,29 @@
+{
+  "name": "ngradialgauge",
+  "version": "1.0.0",
+  "description": "AngularJS Radial Gauge",
+  "main": "src/ng-radial-gauge-dir.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stherrienaspnet/ngRadialGauge.git"
+  },
+  "keywords": [
+    "AngularJS",
+    "Radial",
+    "Gauge",
+    "d3"
+  ],
+  "author": "Stephane Therrien",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stherrienaspnet/ngRadialGauge/issues"
+  },
+  "homepage": "https://github.com/stherrienaspnet/ngRadialGauge#readme",
+  "dependencies": {
+    "angular": "^1.7.0",
+    "d3": "^5.4.0"
+  }
+}

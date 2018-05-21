@@ -2,15 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>ngRadialGauge Demo</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.0/angular.min.js"></script>
+    <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
     <script src="../src/ng-radial-gauge-dir.js"></script>
     <script>
 
     angular.module('RadialGaugeDemo', [
       'ngRadialGauge'
     ]);
-    
+
     angular.module('RadialGaugeDemo').controller('RadialGaugeDemoCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
         $scope.value = 1.5;
         $scope.upperLimit = 6;
@@ -55,8 +55,8 @@
             }, 1000);
         }
         update();
-    }]);    
-    
+    }]);
+
     </script>
 </head>
 <body ng-app="RadialGaugeDemo">
