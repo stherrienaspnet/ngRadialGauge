@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/stherrienaspnet/ngRadialGauge#readme",
   "dependencies": {
-    "angular": "~1.6.3",
-    "d3": "~3.5.15"
+    "angular": "^1.7.0",
+    "d3": "^5.4.0"
   }
 }
